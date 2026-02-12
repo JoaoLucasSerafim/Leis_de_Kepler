@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>As Leis de Kepler</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0b1a2e 0%, #1c2f44 100%);
+            color: #eef5fb;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #3e6a8c;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            letter-spacing: 2px;
+            color: #ffd966;
+            text-shadow: 0 0 8px rgba(255, 220, 100, 0.6);
+            margin-bottom: 0.3rem;
+        }
+
+        .subhead {
+            font-size: 1.2rem;
+            color: #b0d4ec;
+            font-style: italic;
+        }
+
+        /* ---------- SEÇÃO EQUIPE (COM FOTOS REAIS) ---------- */
+        .team-section {
+            background: rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 48px 48px 24px 24px;
+            padding: 2rem 1.5rem;
+            border: 1px solid #3f7999;
+            box-shadow: 0 10px 25px #00000055;
+        }
+
+        .team-title {
+            text-align: center;
+            font-size: 1.9rem;
+            color: #ffd78c;
+            margin-bottom: 1.8rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-shadow: 0 0 6px #ffb84d;
+        }
+
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 2rem 1.5rem;
+        }
+
+        .team-member {
+            text-align: center;
+            max-width: 200px;
+            transition: transform 0.2s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        /* estilo para as FOTOS reais (arredondadas) */
+        .member-photo {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #7ab3c9;
+            box-shadow: 0 8px 0 #0e2a36, 0 12px 30px black;
+            background-color: #1a4452;
+        }
+
+        .team-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fae074;
+            margin-bottom: 0.2rem;
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            color: #bed9ee;
+            font-style: italic;
+            background: #0f2c3b80;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        /* ---------- SEÇÃO IMPORTÂNCIA ---------- */
+        .importance-section {
+            background: #0e2635d9;
+            border-left: 8px solid #ffb347;
+            border-radius: 24px 8px 24px 8px;
+            padding: 1.8rem 2.2rem;
+            box-shadow: 0 8px 20px #00000060;
+            backdrop-filter: blur(3px);
+        }
+
+        .importance-section h3 {
+            font-size: 1.9rem;
+            color: #ffbd5a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
+
+        .importance-section p {
+            font-size: 1.15rem;
+            color: #e1f0fa;
+            text-shadow: 0 1px 2px black;
+            margin-bottom: 0.5rem;
+        }
+
+        .importance-highlight {
+            color: #ffe694;
+            font-weight: 600;
+        }
+
+        /* ---------- CARDS DAS LEIS (com controles) ---------- */
+        .lei-card {
+            background: rgba(10, 25, 40, 0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            border: 1px solid #2e5f7a;
+            box-shadow: 0 20px 30px -8px black;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+
+        .lei-card:hover {
+            border-color: #6c9ec2;
+            background: rgba(12, 30, 48, 0.85);
+        }
+
+        .explicacao {
+            flex: 1 1 280px;
+            padding-right: 1.8rem;
+        }
+
+        .explicacao h2 {
+            color: #ffb86b;
+            font-size: 1.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .explicacao h2 span {
+            font-size: 1.2rem;
+            background: #2a4c66;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            color: white;
+        }
+
+        .explicacao p {
+            font-size: 1.1rem;
+            text-align: justify;
+            margin-top: 0.8rem;
+            color: #d4e9ff;
+        }
+
+        .destaque {
+            color: #ffe08c;
+            font-weight: 600;
+        }
+
+        /* container do canvas + controles */
+        .canvas-container {
+            flex: 0 0 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #051016;
+            border-radius: 24px;
+            padding: 0.8rem;
+            box-shadow: inset 0 0 20px #00000070, 0 10px 20px black;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            background: #0a121c;
+            border-radius: 16px;
+            display: block;
+            border: 1px solid #2d6e8c;
+            box-shadow: 0 0 16px #1e3f4f;
+        }
+
+        /* controles de animação */
+        .animation-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 12px;
+            padding: 0 8px;
+            gap: 10px;
+            color: #cde2f2;
+        }
+
+        .play-pause-btn {
+            background: #1f4a5e;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #62b5cf;
+            box-shadow: 0 4px 0 #0d2a35;
+        }
+
+        .play-pause-btn:hover {
+            background: #2f6a82;
+            transform: scale(0.95);
+        }
+
+        .speed-slider {
+            flex: 1;
+            height: 6px;
+            background: #1a3a47;
+            border-radius: 10px;
+            appearance: none;
+            outline: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #ffd966;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid white;
+            box-shadow: 0 0 12px #ffb343;
+            transition: 0.1s;
+        }
+
+        .speed-slider::-webkit-slider-thumb:hover {
+            background: #ffe69b;
+            transform: scale(1.2);
+        }
+
+        .speed-value {
+            min-width: 60px;
+            background: #0c202b;
+            padding: 6px 10px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #d4f0ff;
+            text-align: center;
+            border: 1px solid #3a889e;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #a0bedb;
+            font-size: 0.95rem;
+            border-top: 1px dashed #3f6f8c;
+            padding-top: 1.8rem;
+        }
+
+        @media (max-width: 900px) {
+            .lei-card {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+            .explicacao {
+                padding-right: 0;
+                margin-bottom: 1.5rem;
+            }
+            .canvas-container {
+                flex-basis: auto;
+                width: 100%;
+            }
+            .team-grid {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔭 LEIS DE KEPLER</h1>
+            <div class="subhead">Movimento planetário em animações interativas</div>
+        </header>
+
+        <!-- ========================================= -->
+        <!-- EQUIPE COM FOTOS REAIS (placeholders)    -->
+        <!-- ========================================= -->
+        <div class="team-section">
+            <div class="team-title">🌟 NOSSA EQUIPE</div>
+            <div class="team-grid">
+                <!-- Jean Saulo · foto via Picsum (substitua pelo caminho real) -->
+                <div class="team-member">
+                    <img class="member-photo" src="images/jean_foto.jpg" alt="Jean Saulo" loading="lazy">
+                    <div class="team-name">Jean Saulo</div>
+                    <span class="team-role">1 Ano E.M STEM/ENG</span>
+                </div>
+                <!-- Deivid Filho -->
+                <div class="team-member">
+                    <img class="member-photo" src="images/deivid_foto.png" alt="Deivid Filho" loading="lazy">
+                    <div class="team-name">Deivid Filho</div>
+                    <span class="team-role">1 Ano E.M STEM/ENG</span>
+                </div>
+                <!-- João Serafim -->
+                <div class="team-member">
+                    <img class="member-photo" src="images/serafim_foto.png" alt="João Serafim" loading="lazy">
+                    <div class="team-name">João Serafim</div>
+                    <span class="team-role">1 Ano E.M STEM/ENG</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- IMPORTÂNCIA DAS LEIS DE KEPLER           -->
+        <!-- ========================================= -->
+        <div class="importance-section">
+            <h3>📌 POR QUE AS LEIS DE KEPLER SÃO FUNDAMENTAIS?</h3>
+            <p>
+                <span class="importance-highlight">Antes de Kepler:</span> órbitas eram descritas por complicados sistemas de epiciclos. 
+                Kepler revelou a <strong>geometria simples do Sistema Solar</strong>: elipses, áreas proporcionais e a harmonia entre período e distância. 
+                Essas leis permitiram que <span class="importance-highlight">Newton</span> formulasse a lei da gravitação universal — unificando a física celeste e terrestre. 
+                Até hoje, são a base para calcular órbitas de satélites, sondas espaciais e exoplanetas. 
+                São a ponte entre a observação pura e a matemática que descreve o cosmos.
+            </p>
+            <p style="margin-top: 0.7rem; color: #f9e0a0;">
+                ⚡ “A astronomia deixava de ser apenas descritiva e tornava-se preditiva.”
+            </p>
+        </div>
+
+        <!-- LEI 1 – ÓRBITAS ELÍPTICAS (COM CONTROLES) -->
+        <div class="lei-card">
+            <div class="explicacao">
+                <h2><span>1ª Lei</span> 🌍 Lei das Órbitas</h2>
+                <p><span class="destaque">"Os planetas descrevem órbitas elípticas em torno do Sol, que ocupa um dos focos."</span><br>
+                A elipse tem dois focos. Nesta animação, o Sol (amarelo) está no foco esquerdo. O planeta azul percorre a elipse — note que a distância até o Sol varia.</p>
+            </div>
+            <div class="canvas-container">
+                <canvas id="canvasLei1" width="400" height="300"></canvas>
+                <!-- controles individuais -->
+                <div class="animation-controls" id="controls1">
+                    <button class="play-pause-btn" id="playPause1">⏸️</button>
+                    <input type="range" class="speed-slider" id="speed1" min="0" max="2.5" step="0.05" value="1.0">
+                    <span class="speed-value" id="speedValue1">1.00x</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEI 2 – ÁREAS IGUAIS (COM CONTROLES) -->
+        <div class="lei-card">
+            <div class="explicacao">
+                <h2><span>2ª Lei</span> ⏳ Lei das Áreas</h2>
+                <p><span class="destaque">"O vetor que liga o planeta ao Sol varre áreas iguais em intervalos de tempo iguais."</span><br>
+                Mostramos dois setores de <strong>mesma área</strong>. O setor vermelho (periélio) é mais largo; o setor azul (afélio) é mais estreito. As áreas são matematicamente iguais.</p>
+            </div>
+            <div class="canvas-container">
+                <canvas id="canvasLei2" width="400" height="300"></canvas>
+                <div class="animation-controls" id="controls2">
+                    <button class="play-pause-btn" id="playPause2">⏸️</button>
+                    <input type="range" class="speed-slider" id="speed2" min="0" max="2.5" step="0.05" value="1.0">
+                    <span class="speed-value" id="speedValue2">1.00x</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEI 3 – PERÍODO E DISTÂNCIA (COM CONTROLES) -->
+        <div class="lei-card">
+            <div class="explicacao">
+                <h2><span>3ª Lei</span> 📐 Lei Harmônica</h2>
+                <p><span class="destaque">"O quadrado do período orbital é proporcional ao cubo do semi-eixo maior da órbita."</span><br>
+                Animação com dois planetas: <span style="color:#7ec8ff;">interno (a=80)</span> e <span style="color:#ffac7e;">externo (a=150)</span>. O período do externo é ≈2,57× maior.</p>
+            </div>
+            <div class="canvas-container">
+                <canvas id="canvasLei3" width="400" height="300"></canvas>
+                <div class="animation-controls" id="controls3">
+                    <button class="play-pause-btn" id="playPause3">⏸️</button>
+                    <input type="range" class="speed-slider" id="speed3" min="0" max="2.5" step="0.05" value="1.0">
+                    <span class="speed-value" id="speedValue3">1.00x</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <span>⚝ Johannes Kepler (1609–1619) — revolucionou a astronomia ⚝</span><br>
+            <span style="font-size:0.9rem; color:#b8d8ff;">Jean, Deivid & João · 2026</span>
+        </footer>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            const PI = Math.PI;
+            const TAU = 2 * PI;
+            const W = 400, H = 300;
+
+            /* -----------------------------------------------------
+               Função auxiliar para criar controles sincronizados 
+               com cada animação (padrão fábrica)
+            ----------------------------------------------------- */
+            function criarAnimacaoComControles(leiId, config) {
+                const canvas = document.getElementById(`canvasLei${leiId}`);
+                const ctx = canvas.getContext('2d');
+
+                // elementos de controle
+                const playPauseBtn = document.getElementById(`playPause${leiId}`);
+                const speedSlider = document.getElementById(`speed${leiId}`);
+                const speedSpan = document.getElementById(`speedValue${leiId}`);
+
+                // estado da animação
+                let isPaused = false;
+                let speedFactor = 1.0;
+
+                // inicializa o span
+                speedSpan.textContent = speedFactor.toFixed(2) + 'x';
+
+                // configura os listeners
+                playPauseBtn.addEventListener('click', () => {
+                    isPaused = !isPaused;
+                    playPauseBtn.textContent = isPaused ? '▶️' : '⏸️';
+                });
+
+                speedSlider.addEventListener('input', (e) => {
+                    speedFactor = parseFloat(e.target.value);
+                    speedSpan.textContent = speedFactor.toFixed(2) + 'x';
+                });
+
+                // ---- parâmetros específicos de cada lei ----
+                let animState; // será preenchido pelo config.init
+
+                // função de desenho que será chamada pelo requestAnimationFrame
+                function desenhar() {
+                    // só atualiza o ângulo se NÃO estiver pausado
+                    if (!isPaused) {
+                        config.atualizarAngulo(speedFactor);
+                    }
+
+                    // sempre desenha o quadro
+                    ctx.clearRect(0, 0, W, H);
+                    config.desenhar(ctx);
+
+                    requestAnimationFrame(desenhar);
+                }
+
+                // inicia o loop
+                requestAnimationFrame(desenhar);
+            }
+
+            /* -----------------------------------------------------
+               LEI 1 - configuração
+            ----------------------------------------------------- */
+            (function() {
+                const cx = 200, cy = 150;
+                const a = 120, b = 80;
+                const c = Math.sqrt(a * a - b * b);
+                const focoX = cx - c, focoY = cy;
+                let angle = 0;
+
+                const config = {
+                    atualizarAngulo: (speed) => {
+                        angle += 0.015 * speed;
+                        if (angle > TAU) angle -= TAU;
+                    },
+                    desenhar: (ctx) => {
+                        // elipse
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.strokeStyle = '#6fc1d0';
+                        ctx.lineWidth = 1.8;
+                        ctx.setLineDash([4, 6]);
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, a, b, 0, 0, TAU);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.restore();
+
+                        // sol
+                        ctx.beginPath();
+                        ctx.arc(focoX, focoY, 9, 0, TAU);
+                        ctx.fillStyle = '#ffaa33';
+                        ctx.shadowColor = '#ffdd77';
+                        ctx.shadowBlur = 14;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.beginPath();
+                        ctx.arc(focoX, focoY, 13, 0, TAU);
+                        ctx.fillStyle = '#ffdd9977';
+                        ctx.shadowBlur = 10;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        const planetX = cx + a * Math.cos(angle);
+                        const planetY = cy + b * Math.sin(angle);
+
+                        ctx.beginPath();
+                        ctx.moveTo(focoX, focoY);
+                        ctx.lineTo(planetX, planetY);
+                        ctx.strokeStyle = '#a5d8e0';
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.arc(planetX, planetY, 6, 0, TAU);
+                        ctx.fillStyle = '#4ab5ff';
+                        ctx.shadowColor = '#4ab5ff';
+                        ctx.shadowBlur = 12;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 2, 0, TAU);
+                        ctx.fillStyle = '#d0e4ff';
+                        ctx.fill();
+
+                        ctx.font = '12px "Segoe UI", sans-serif';
+                        ctx.fillStyle = '#fceb9c';
+                        ctx.fillText('☉ Sol', focoX - 30, focoY - 22);
+                        ctx.fillStyle = '#b3e4ff';
+                        ctx.fillText('planeta', planetX + 12, planetY - 16);
+                    }
+                };
+
+                criarAnimacaoComControles(1, config);
+            })();
+
+            /* -----------------------------------------------------
+               LEI 2 - configuração (setores de área igual)
+            ----------------------------------------------------- */
+            (function() {
+                const cx = 200, cy = 150;
+                const a = 120, b = 80;
+                const c = Math.sqrt(a * a - b * b);
+                const focoX = cx - c;
+
+                const r_per = a - c;
+                const r_af  = a + c;
+                const deltaAf = 0.06;
+                const deltaPer = deltaAf * (r_af * r_af) / (r_per * r_per);
+
+                const angAfCenter = 0.0;
+                const angPerCenter = PI;
+
+                function pontoElipse(ang) {
+                    return { x: cx + a * Math.cos(ang), y: cy + b * Math.sin(ang) };
+                }
+
+                let planetaAng = 0;
+
+                const config = {
+                    atualizarAngulo: (speed) => {
+                        planetaAng += 0.018 * speed;
+                        if (planetaAng > TAU) planetaAng -= TAU;
+                    },
+                    desenhar: (ctx) => {
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.strokeStyle = '#7eaec0';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([5, 5]);
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, a, b, 0, 0, TAU);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.restore();
+
+                        ctx.beginPath();
+                        ctx.arc(focoX, cy, 10, 0, TAU);
+                        ctx.fillStyle = '#fdc42c';
+                        ctx.shadowColor = '#ffc164';
+                        ctx.shadowBlur = 16;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        // setor afélio
+                        const pAf1 = pontoElipse(angAfCenter - deltaAf/2);
+                        const pAf2 = pontoElipse(angAfCenter + deltaAf/2);
+                        ctx.beginPath();
+                        ctx.moveTo(focoX, cy);
+                        ctx.lineTo(pAf1.x, pAf1.y);
+                        ctx.lineTo(pAf2.x, pAf2.y);
+                        ctx.closePath();
+                        ctx.fillStyle = '#2680b0cc';
+                        ctx.shadowBlur = 6;
+                        ctx.shadowColor = '#0077be';
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = '#9ad9ff';
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+
+                        // setor periélio
+                        const pPer1 = pontoElipse(angPerCenter - deltaPer/2);
+                        const pPer2 = pontoElipse(angPerCenter + deltaPer/2);
+                        ctx.beginPath();
+                        ctx.moveTo(focoX, cy);
+                        ctx.lineTo(pPer1.x, pPer1.y);
+                        ctx.lineTo(pPer2.x, pPer2.y);
+                        ctx.closePath();
+                        ctx.fillStyle = '#cc5544cc';
+                        ctx.shadowColor = '#c03b2b';
+                        ctx.shadowBlur = 6;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.strokeStyle = '#ffaaa5';
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+
+                        ctx.font = 'bold 11px "Segoe UI"';
+                        ctx.fillStyle = '#d7ecff';
+                        ctx.fillText('Afélio (área igual)', 230, 70);
+                        ctx.fillStyle = '#ffc7b0';
+                        ctx.fillText('Periélio (área igual)', 30, 210);
+
+                        // planeta
+                        const pX = cx + a * Math.cos(planetaAng);
+                        const pY = cy + b * Math.sin(planetaAng);
+                        ctx.beginPath();
+                        ctx.arc(pX, pY, 7, 0, TAU);
+                        ctx.fillStyle = '#9ef0ff';
+                        ctx.shadowColor = '#1ecbe1';
+                        ctx.shadowBlur = 14;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        ctx.font = 'italic 10px sans-serif';
+                        ctx.fillStyle = '#d2ecb0';
+                        ctx.fillText('mesma área →', 140, 260);
+                    }
+                };
+
+                criarAnimacaoComControles(2, config);
+            })();
+
+            /* -----------------------------------------------------
+               LEI 3 - configuração (dois planetas, T² ∝ a³)
+            ----------------------------------------------------- */
+            (function() {
+                const cx = 200, cy = 150;
+                const raio1 = 80;
+                const periodo1 = 180;
+                const raio2 = 150;
+                const periodo2 = periodo1 * Math.pow(raio2 / raio1, 1.5);
+
+                const velBase1 = TAU / periodo1;
+                const velBase2 = TAU / periodo2;
+
+                let ang1 = 0, ang2 = 0;
+
+                const config = {
+                    atualizarAngulo: (speed) => {
+                        ang1 += velBase1 * speed;
+                        ang2 += velBase2 * speed;
+                        if (ang1 > TAU) ang1 -= TAU;
+                        if (ang2 > TAU) ang2 -= TAU;
+                    },
+                    desenhar: (ctx) => {
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.strokeStyle = '#5b8c9c';
+                        ctx.lineWidth = 1.2;
+                        ctx.setLineDash([3, 6]);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, raio1, 0, TAU);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(0, 0, raio2, 0, TAU);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.restore();
+
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 12, 0, TAU);
+                        ctx.fillStyle = '#ffe06b';
+                        ctx.shadowColor = '#ffbc3b';
+                        ctx.shadowBlur = 22;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 6, 0, TAU);
+                        ctx.fillStyle = '#ffbb33';
+                        ctx.fill();
+
+                        const x1 = cx + raio1 * Math.cos(ang1);
+                        const y1 = cy + raio1 * Math.sin(ang1);
+                        ctx.beginPath();
+                        ctx.arc(x1, y1, 7, 0, TAU);
+                        ctx.fillStyle = '#7ec8ff';
+                        ctx.shadowColor = '#3d98c7';
+                        ctx.shadowBlur = 14;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.font = '11px "Segoe UI"';
+                        ctx.fillStyle = '#c7e7ff';
+                        ctx.fillText('T₁', x1 + 12, y1 - 12);
+
+                        const x2 = cx + raio2 * Math.cos(ang2);
+                        const y2 = cy + raio2 * Math.sin(ang2);
+                        ctx.beginPath();
+                        ctx.arc(x2, y2, 9, 0, TAU);
+                        ctx.fillStyle = '#ffac7e';
+                        ctx.shadowColor = '#d97346';
+                        ctx.shadowBlur = 16;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = '#ffe0c0';
+                        ctx.fillText('T₂', x2 + 14, y2 - 18);
+
+                        ctx.font = 'bold 12px monospace';
+                        ctx.fillStyle = '#e0edb0';
+                        ctx.fillText(`T₂² / T₁² ≈ (a₂/a₁)³`, 200, 280);
+                        ctx.font = '10px sans-serif';
+                        ctx.fillStyle = '#bbd9ff';
+                        ctx.fillText(`período externo ~ ${periodo2.toFixed(0)} frames`, 210, 45);
+                        ctx.fillStyle = '#b0e6ff';
+                        ctx.fillText(`período interno = ${periodo1} frames`, 30, 45);
+                    }
+                };
+
+                criarAnimacaoComControles(3, config);
+            })();
+
+        })();
+    </script>
+
+    <!-- Observação: as fotos são do serviço Picsum (imagens livres). Substitua os src pelos arquivos reais, se necessário. -->
+</body>
+</html>
